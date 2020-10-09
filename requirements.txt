@@ -1,7 +1,6 @@
 django
 django-bootstrap4
 django-cropperjs
-django-login-otp
 pint
 loguru
 markdown

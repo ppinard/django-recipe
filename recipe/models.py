@@ -7,7 +7,7 @@ from pathlib import Path
 # Third party modules.
 from django.db import models
 from django.apps import apps
-from login_otp.models import User
+from django.contrib.auth import get_user_model
 from cropperjs.models import CropperImageField
 
 # Local modules.
@@ -34,7 +34,7 @@ class Recipe(models.Model):
     )
     name = models.CharField("name", max_length=255)
     description = models.TextField(blank=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
     reference = models.CharField("reference", max_length=255, blank=True)
     cooking_time_min = models.PositiveIntegerField(null=True, blank=True)
     image = CropperImageField(
