@@ -1,0 +1,32 @@
+{% extends "recipe/base.html" %}
+{% load static %}
+
+{% block title %}{{ recipe.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex mt-4">
+    <h2>{{ recipe.name }}</h2>
+    <div class="ml-auto align-bottom">
+        {% if request.user.is_authenticated %}
+            <a href="/recipe/edit/{{ recipe.pk }}" class="btn btn-primary btn-sm">Edit</a>
+        {% else %}
+            <a href="/login" class="btn btn-primary btn-sm">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<p>{{ recipe.description }}</p>
+
+<div class="float-right d-none d-md-block">
+    {% if recipe.image %}
+        <img src="{{ recipe.image.url }}" class="mr-3" alt="" width=150 height=150>
+    {% else %}
+        <img src="{% get_static_prefix %}recipe/recipe_blank.svg" class="mr-3" alt="" width=75 height=75>
+    {% endif %}
+</div>
+
+<div>
+{{ instructions_html | safe }}
+</div>
+
+{% endblock %}
