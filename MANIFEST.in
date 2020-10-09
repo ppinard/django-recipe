@@ -1,3 +1,5 @@
 include versioneer.py
 include recipe/_version.py
 recursive-include tests *.py
+recursive-include recipe/static *
+recursive-include recipe/templates *
