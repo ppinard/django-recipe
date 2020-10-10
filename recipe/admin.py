@@ -8,6 +8,7 @@ from django.contrib import admin
 
 # Local modules.
 from .models import Recipe
+from .widgets import InstructionsTextWidget
 
 # Globals and constants variables.
 
@@ -40,6 +41,9 @@ class RecipeChangeForm(forms.ModelForm):
             "instructions_markdown",
             "image",
         )
+        widgets = {
+            "instructions_markdown": InstructionsTextWidget(),
+        }
 
 
 class RecipeAdmin(admin.ModelAdmin):

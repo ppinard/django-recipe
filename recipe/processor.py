@@ -158,11 +158,15 @@ class IngredientList:
 
 
 class RecipePreprocessor(Preprocessor):
-    def __init__(self, unit_definitions, unit_conversions, md=None):
+    def __init__(
+        self, unit_definitions, unit_conversions, output_ingredient_list=True, md=None
+    ):
         super().__init__(md)
         self.ingredientlist = IngredientList(unit_definitions, unit_conversions)
+        self.output_ingredient_list = output_ingredient_list
 
     def run(self, lines):
+        # Process lines
         newlines = []
         for line in lines:
             while True:
@@ -184,14 +188,16 @@ class RecipePreprocessor(Preprocessor):
         else:
             newlines.append(line)
 
-        newlines = (
-            ["# Ingredients", ""]
-            + self.ingredientlist.get_list()
-            + ["# Instructions", ""]
-            + newlines
-        )
+        # Create output lines
+        outlines = []
+        if self.output_ingredient_list:
+            outlines += ["# Ingredients", ""]
+            outlines += self.ingredientlist.get_list()
+            outlines += ["# Instructions", ""]
 
-        return newlines
+        outlines += newlines
+
+        return outlines
 
 
 class TemperatureInlineProcessor(InlineProcessor):
@@ -226,13 +232,21 @@ class TemperatureInlineProcessor(InlineProcessor):
 
 
 class RecipeExtension(Extension):
-    def __init__(self, unit_definitions, unit_conversions, **kwargs):
+    def __init__(
+        self, unit_definitions, unit_conversions, output_ingredient_list, **kwargs
+    ):
         super().__init__(**kwargs)
         self.unit_definitions = unit_definitions
         self.unit_conversions = unit_conversions
+        self.output_ingredient_list = output_ingredient_list
 
     def extendMarkdown(self, md):
-        processor = RecipePreprocessor(self.unit_definitions, self.unit_conversions, md)
+        processor = RecipePreprocessor(
+            self.unit_definitions,
+            self.unit_conversions,
+            self.output_ingredient_list,
+            md,
+        )
         md.preprocessors.register(processor, "recipe", 12)
 
         pattern = r"\((?P<temperature>\d+)\)\[(?P<unit>[CF]?)\]"
@@ -242,4 +256,11 @@ class RecipeExtension(Extension):
 MARKDOWN_EXT = RecipeExtension(
     getattr(settings, "RECIPE_UNIT_DEFINITIONS", {}),
     getattr(settings, "RECIPE_UNIT_CONVERSIONS", []),
+    output_ingredient_list=True,
+)
+
+MARKDOWN_EXT_PREVIEW = RecipeExtension(
+    getattr(settings, "RECIPE_UNIT_DEFINITIONS", {}),
+    getattr(settings, "RECIPE_UNIT_CONVERSIONS", []),
+    output_ingredient_list=False,
 )

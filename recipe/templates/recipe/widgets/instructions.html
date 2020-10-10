@@ -1,0 +1,8 @@
+<div style="display: flex">
+    <div>
+        <textarea name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>{% if widget.value %}{{ widget.value }}{% endif %}</textarea>
+    </div>
+    <div style="margin-left: 1em">
+        <div id="{{ widget.name }}-preview">(empty)</div>
+    </div>
+</div>

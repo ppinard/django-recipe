@@ -14,7 +14,7 @@ import markdown
 
 # Local modules.
 from .models import Recipe
-from .processor import MARKDOWN_EXT
+from .processor import MARKDOWN_EXT_PREVIEW
 
 # Globals and constants variables.
 
@@ -85,6 +85,6 @@ class RecipeView(RecipeBaseMixin, TemplateView):
 def process_instructions(request):
     rawcontent = request.GET["content"]
     outcontent = markdown.markdown(
-        rawcontent, output="html5", extensions=[MARKDOWN_EXT]
+        rawcontent, output="html5", extensions=[MARKDOWN_EXT_PREVIEW]
     )
     return JsonResponse({"content": outcontent})
