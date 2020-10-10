@@ -20,6 +20,13 @@ def _recipe_upload_to(instance, filename):
     return f"recipe/{uuid.uuid4()}{Path(filename).suffix}"
 
 
+_INSTRUCTIONS_HELP = """Enter instructions for the recipe. Enter ingredient as <code>[quantity](unit)[ingredient]</code>
+or <code>[quantity][ingredient]</code>. The ingredient list will be
+automatically compiled from the ingredients in the instructions.
+Enter temperature as (<code>temperature)[C]</code> or <code>(temperature)[F]</code>
+"""
+
+
 class Recipe(models.Model):
     class RecipeCategory(models.TextChoices):
         SOUP = "soup", "Soup"
@@ -49,7 +56,9 @@ class Recipe(models.Model):
         aspectratio=1.0,
         dimensions=(75, 75),
     )
-    instructions_markdown = models.TextField("instructions")
+    instructions_markdown = models.TextField(
+        "instructions", help_text=_INSTRUCTIONS_HELP
+    )
     instructions_html = models.TextField(blank=True)
 
     def __str__(self):
