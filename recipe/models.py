@@ -6,7 +6,7 @@ from pathlib import Path
 
 # Third party modules.
 from django.db import models
-from django.apps import apps
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from cropperjs.models import CropperImageField
 import markdown
@@ -15,8 +15,10 @@ import markdown
 from .processor import RecipeExtension
 
 # Globals and constants variables.
-config = apps.get_app_config("recipe")
-MARKDOWN_EXT = RecipeExtension(config.unit_definitions, config.unit_conversions)
+MARKDOWN_EXT = RecipeExtension(
+    getattr(settings, "RECIPE_UNIT_DEFINITIONS", {}),
+    getattr(settings, "RECIPE_UNIT_CONVERSIONS", []),
+)
 
 
 class Recipe(models.Model):
