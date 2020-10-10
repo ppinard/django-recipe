@@ -4,14 +4,17 @@
 import re
 
 # Third party modules.
+from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
 from django.contrib.auth import views as auth_views
 from login_otp.admin import UserAuthenticationForm
 from bs4 import BeautifulSoup
+import markdown
 
 # Local modules.
 from .models import Recipe
+from .processor import MARKDOWN_EXT
 
 # Globals and constants variables.
 
@@ -77,3 +80,11 @@ class RecipeView(RecipeBaseMixin, TemplateView):
         context["instructions_html"] = str(soup)
 
         return context
+
+
+def process_instructions(request):
+    rawcontent = request.GET["content"]
+    outcontent = markdown.markdown(
+        rawcontent, output="html5", extensions=[MARKDOWN_EXT]
+    )
+    return JsonResponse({"content": outcontent})

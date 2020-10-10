@@ -11,6 +11,7 @@ from markdown.preprocessors import Preprocessor
 from markdown.inlinepatterns import InlineProcessor
 from markdown.extensions import Extension
 
+from django.conf import settings
 from loguru import logger
 import humanize
 import pint
@@ -236,3 +237,9 @@ class RecipeExtension(Extension):
 
         pattern = r"\((?P<temperature>\d+)\)\[(?P<unit>[CF]?)\]"
         md.inlinePatterns.register(TemperatureInlineProcessor(pattern, md), "temp", 175)
+
+
+MARKDOWN_EXT = RecipeExtension(
+    getattr(settings, "RECIPE_UNIT_DEFINITIONS", {}),
+    getattr(settings, "RECIPE_UNIT_CONVERSIONS", []),
+)

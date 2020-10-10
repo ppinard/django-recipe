@@ -19,6 +19,7 @@ urlpatterns = [
         name="category",
     ),
     path("recipe/<int:pk>/", views.RecipeView.as_view(), name="recipe"),
+    path("api/process", views.process_instructions, name="process"),
     path("login/", views.LoginView.as_view(), name="login",),
     path("logout/", views.LogoutView.as_view(), name="logout"),
 ]
