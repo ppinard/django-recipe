@@ -1,3 +1,6 @@
+manage.py
+django_recipe
+*.sqlite3
 
 # Created by https://www.gitignore.io/api/code,python,pycharm,eclipse
 # Edit at https://www.gitignore.io/?templates=code,python,pycharm,eclipse

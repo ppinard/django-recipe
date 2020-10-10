@@ -16,6 +16,10 @@ from .processor import MARKDOWN_EXT
 # Globals and constants variables.
 
 
+def _recipe_upload_to(instance, filename):
+    return f"recipe/{uuid.uuid4()}{Path(filename).suffix}"
+
+
 class Recipe(models.Model):
     class RecipeCategory(models.TextChoices):
         SOUP = "soup", "Soup"
@@ -39,7 +43,7 @@ class Recipe(models.Model):
     reference = models.CharField("reference", max_length=255, blank=True)
     cooking_time_min = models.PositiveIntegerField(null=True, blank=True)
     image = CropperImageField(
-        upload_to=lambda _instance, filename: f"recipe/{uuid.uuid4()}{Path(filename).suffix}",
+        upload_to=_recipe_upload_to,
         null=True,
         blank=True,
         aspectratio=1.0,
