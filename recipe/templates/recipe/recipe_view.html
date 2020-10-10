@@ -20,8 +20,6 @@
 <div class="float-right d-none d-md-block">
     {% if recipe.image %}
         <img src="{{ recipe.image.url }}" class="mr-3" alt="" width=150 height=150>
-    {% else %}
-        <img src="{% get_static_prefix %}recipe/recipe_blank.svg" class="mr-3" alt="" width=75 height=75>
     {% endif %}
 </div>
 
