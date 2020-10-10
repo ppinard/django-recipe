@@ -9,6 +9,7 @@ from django.db import models
 from django.apps import apps
 from django.contrib.auth import get_user_model
 from cropperjs.models import CropperImageField
+import markdown
 
 # Local modules.
 
@@ -51,8 +52,12 @@ class Recipe(models.Model):
         return f"<Recipe({self.category}-{self.name})>"
 
     def save(self, *args, **kwargs):
-        config = apps.get_app_config("recipe")
-        self.instructions_html = config.process_recipe_instructions(
+        self.instructions_html = self.process_recipe_instructions(
             self.instructions_markdown,
         )
         super().save(*args, **kwargs)
+
+    def process_recipe_instructions(self, rawcontent):
+        config = apps.get_app_config("recipe")
+        ext = config.ext
+        return markdown.markdown(rawcontent, output="html5", extensions=[ext])

@@ -4,7 +4,6 @@
 
 # Third party modules.
 from django.apps import AppConfig
-import markdown
 
 # Local modules.
 from .processor import RecipeExtension
@@ -63,6 +62,3 @@ class RecipeConfig(AppConfig):
     def ready(self):
         super().ready()
         self.ext = RecipeExtension(self.unit_definitions, self.unit_conversions)
-
-    def process_recipe_instructions(self, rawcontent):
-        return markdown.markdown(rawcontent, output="html5", extensions=[self.ext])
