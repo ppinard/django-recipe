@@ -5,6 +5,10 @@
 
 {% block bootstrap4_title %}Recipe book - {% block title %}{% endblock %}{% endblock %}
 
+{% block bootstrap4_extra_head %}
+<link rel="shortcut icon" href="{% get_static_prefix %}favicon.ico">
+{% endblock %}
+
 {% block bootstrap4_content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">

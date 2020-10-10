@@ -16,7 +16,9 @@ with open(BASEDIR.joinpath("README.md"), "r") as fp:
     LONG_DESCRIPTION = fp.read()
 
 PACKAGES = find_packages()
-PACKAGE_DATA = {"recipe": ["static/recipe/*.svg", "templates/recipe/*.html"]}
+PACKAGE_DATA = {
+    "recipe": ["static/recipe/*.svg", "static/recipe/*.ico", "templates/recipe/*.html"]
+}
 
 with open(BASEDIR.joinpath("requirements.txt"), "r") as fp:
     INSTALL_REQUIRES = fp.read().splitlines()
