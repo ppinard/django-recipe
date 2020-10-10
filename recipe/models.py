@@ -12,8 +12,11 @@ from cropperjs.models import CropperImageField
 import markdown
 
 # Local modules.
+from .processor import RecipeExtension
 
 # Globals and constants variables.
+config = apps.get_app_config("recipe")
+MARKDOWN_EXT = RecipeExtension(config.unit_definitions, config.unit_conversions)
 
 
 class Recipe(models.Model):
@@ -58,6 +61,4 @@ class Recipe(models.Model):
         super().save(*args, **kwargs)
 
     def process_recipe_instructions(self, rawcontent):
-        config = apps.get_app_config("recipe")
-        ext = config.ext
-        return markdown.markdown(rawcontent, output="html5", extensions=[ext])
+        return markdown.markdown(rawcontent, output="html5", extensions=[MARKDOWN_EXT])

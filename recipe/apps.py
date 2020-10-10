@@ -6,7 +6,6 @@
 from django.apps import AppConfig
 
 # Local modules.
-from .processor import RecipeExtension
 
 # Globals and constants variables.
 
@@ -58,7 +57,3 @@ class RecipeConfig(AppConfig):
             "units": ["cup", "g", "tablespoon", "teaspoon"],
         },
     ]
-
-    def ready(self):
-        super().ready()
-        self.ext = RecipeExtension(self.unit_definitions, self.unit_conversions)
