@@ -16,9 +16,9 @@
     </div>
 </div>
 
-{%if object_list %}
+{%if recipes %}
     <div>
-    {% for recipe in object_list %}
+    {% for recipe in recipes %}
     <div class="media border rounded p-4 my-2">
         <a href="/recipe/{{ recipe.pk }}">
             {% if recipe.image %}
@@ -42,7 +42,7 @@
     <p>No recipes</p>
 {% endif %}
 
-{% if object_list %}
+{% if recipes %}
     <nav aria-label="pagination">
       <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}

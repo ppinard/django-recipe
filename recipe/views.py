@@ -44,7 +44,8 @@ class RecipeIndexView(RecipeBaseMixin, TemplateView):
 class RecipeCategoryListView(RecipeBaseMixin, ListView):
     template_name = "recipe/recipe_list.html"
     model = Recipe
-    paginate_by = 5
+    paginate_by = 25
+    context_object_name = "recipes"
 
     def get_queryset(self):
         category = self.kwargs["category"]
