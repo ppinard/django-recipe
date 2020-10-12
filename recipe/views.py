@@ -41,10 +41,6 @@ class LogoutView(RecipeBaseMixin, auth_views.LogoutView):
     template_name = "recipe/logout.html"
 
 
-class RecipeIndexView(RecipeBaseMixin, TemplateView):
-    template_name = "recipe/home.html"
-
-
 class RecipeListView(RecipeBaseMixin, ListView):
     template_name = "recipe/recipe_list.html"
     model = Recipe
@@ -52,15 +48,22 @@ class RecipeListView(RecipeBaseMixin, ListView):
     context_object_name = "recipes"
 
     def get_queryset(self):
-        category = self.kwargs["category"]
-        return self.model.objects.filter(category=category)
+        category = self.kwargs.get("category")
+        if category:
+            return self.model.objects.filter(category=category)
+        else:
+            return self.model.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        category = self.kwargs["category"]
-        context["requested_category_key"] = category
-        context["requested_category_name"] = dict(context["categories"])[category]
+        category = self.kwargs.get("category")
+        if category:
+            context["requested_category_key"] = category
+            context["requested_category_name"] = dict(context["categories"])[category]
+        else:
+            context["requested_category_key"] = "index"
+            context["requested_category_name"] = "Home"
 
         return context
 

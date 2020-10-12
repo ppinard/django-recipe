@@ -12,7 +12,7 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.RecipeIndexView.as_view(), name="index"),
+    path("", views.RecipeListView.as_view(), name="index"),
     path(
         "category/<str:category>/", views.RecipeListView.as_view(), name="recipe-list",
     ),
