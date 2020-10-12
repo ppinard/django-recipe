@@ -23,7 +23,7 @@
     <div>
     {% for recipe in recipes %}
     <div class="media border rounded p-4 my-2">
-        <a href="{% url 'recipe' recipe.pk %}">
+        <a href="{% url 'recipe-details' recipe.pk %}">
             {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="mr-3" alt="" width=75 height=75>
             {% else %}
@@ -32,7 +32,7 @@
             
         </a>
         <div class="media-body">
-            <a href="{% url 'recipe' recipe.pk %}" class="text-reset"><h5 class="mt-0">{{ recipe.name }}</h5></a>
+            <a href="{% url 'recipe-details' recipe.pk %}" class="text-reset"><h5 class="mt-0">{{ recipe.name }}</h5></a>
             {{ recipe.description }}
             {% if recipe.cooking_time_min %}
                 <em>({{ recipe.cooking_time_min }} min)</em>

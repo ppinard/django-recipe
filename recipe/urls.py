@@ -14,11 +14,9 @@ from . import views
 urlpatterns = [
     path("", views.RecipeIndexView.as_view(), name="index"),
     path(
-        "category/<str:category>/",
-        views.RecipeCategoryListView.as_view(),
-        name="category",
+        "category/<str:category>/", views.RecipeListView.as_view(), name="recipe-list",
     ),
-    path("recipe/<int:pk>/", views.RecipeView.as_view(), name="recipe"),
+    path("recipe/<int:pk>/", views.RecipeDetailsView.as_view(), name="recipe-details"),
     path("recipe/create/", views.RecipeCreateView.as_view(), name="recipe-create"),
     path(
         "recipe/<int:pk>/change/",

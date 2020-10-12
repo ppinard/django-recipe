@@ -45,7 +45,7 @@ class RecipeIndexView(RecipeBaseMixin, TemplateView):
     template_name = "recipe/home.html"
 
 
-class RecipeCategoryListView(RecipeBaseMixin, ListView):
+class RecipeListView(RecipeBaseMixin, ListView):
     template_name = "recipe/recipe_list.html"
     model = Recipe
     paginate_by = 25
@@ -65,7 +65,7 @@ class RecipeCategoryListView(RecipeBaseMixin, ListView):
         return context
 
 
-class RecipeView(RecipeBaseMixin, TemplateView):
+class RecipeDetailsView(RecipeBaseMixin, TemplateView):
     template_name = "recipe/recipe_view.html"
 
     def get_context_data(self, **kwargs):

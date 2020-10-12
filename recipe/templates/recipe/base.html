@@ -12,7 +12,7 @@
 {% block bootstrap4_content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-    <a class="navbar-brand" href="/">Recipe book</a>
+    <a class="navbar-brand" href="{% url 'index' %}">Recipe book</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
         data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -27,7 +27,7 @@
                 {% endif %}
             
                 <li class="nav-item">
-                    <a class="nav-link btn-outline-secondary {{ extra_classes }}" href="/category/{{ category_key }}">
+                    <a class="nav-link btn-outline-secondary {{ extra_classes }}" href="{% url 'recipe-list' category_key %}">
                     <img src="{% get_static_prefix %}recipe/{{ category_key }}.svg" width="20" height="20" alt="">
                     {{ category_name }}
                     </a>
