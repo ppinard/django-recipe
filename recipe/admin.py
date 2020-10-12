@@ -29,7 +29,14 @@ class RecipeAdmin(admin.ModelAdmin):
         ),
         (
             "Instructions",
-            {"fields": ("cooking_time_min", "instructions_markdown", "image")},
+            {
+                "fields": (
+                    "cooking_time_min",
+                    "portions",
+                    "instructions_markdown",
+                    "image",
+                )
+            },
         ),
     )
     #     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

@@ -49,6 +49,7 @@ class Recipe(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
     reference = models.CharField("reference", max_length=255, blank=True)
     cooking_time_min = models.PositiveIntegerField(null=True, blank=True)
+    portions = models.PositiveIntegerField(null=True, blank=True)
     image = CropperImageField(
         upload_to=_recipe_upload_to,
         null=True,

@@ -31,7 +31,19 @@
     </div>
 </div>
 
-<p>{{ recipe.description }}</p>
+<p class="lead">{{ recipe.description }}</p>
+
+<p>
+{% if recipe.cooking_time_min is not None %}
+Cooking time: {{ recipe.cooking_time_min }} min
+{% if recipe.portions is not None %} | {% endif %}
+{% endif %}
+
+{% if recipe.portions is not None %}
+Portions: {{ recipe.portions }}
+{% endif %}
+
+</p>
 
 <div class="float-right d-none d-md-block">
     {% if recipe.image %}

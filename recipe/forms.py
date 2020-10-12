@@ -22,6 +22,7 @@ class RecipeCreationForm(forms.ModelForm):
             "description",
             "reference",
             "cooking_time_min",
+            "portions",
             "instructions_markdown",
             "image",
         )
@@ -45,6 +46,7 @@ class RecipeChangeForm(forms.ModelForm):
             "description",
             "reference",
             "cooking_time_min",
+            "portions",
             "instructions_markdown",
             "image",
         )
