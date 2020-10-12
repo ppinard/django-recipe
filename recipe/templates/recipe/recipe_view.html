@@ -8,7 +8,9 @@
     <h2>{{ recipe.name }}</h2>
     <div class="ml-auto align-bottom">
         {% if request.user.is_authenticated %}
-            {% if recipe.user == request.user %}
+            <div class="btn-group" role="group" aria-label="Toolbar">
+            
+            {% if request.user.is_admin or recipe.user == request.user %}
                 <a href="{% url 'recipe-change' recipe.pk %}" class="btn btn-primary btn-sm">Edit</a>
             {% else %}
                 <span
@@ -20,6 +22,9 @@
                     <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>Edit</button>
                 </span>
             {% endif %}
+            
+            <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
+            </div>
         {% else %}
             <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
         {% endif %}

@@ -112,7 +112,7 @@ class RecipeChangeView(RecipeBaseMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         obj = self.get_object()
-        return obj.user == self.request.user
+        return self.request.user.is_admin or obj.user == self.request.user
 
     def form_valid(self, form):
         super().form_valid(form)
