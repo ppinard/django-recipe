@@ -9,9 +9,9 @@
     <h2>{{ requested_category_name }}</h2>
     <div class="ml-auto align-bottom">
         {% if request.user.is_authenticated %}
-            <a href="/recipe/add" class="btn btn-primary btn-sm">Add</a>
+            <a href="{% url 'recipe-create' %}" class="btn btn-primary btn-sm">Add</a>
         {% else %}
-            <a href="/login" class="btn btn-primary btn-sm">Login</a>
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
         {% endif %}
     </div>
 </div>
@@ -20,7 +20,7 @@
     <div>
     {% for recipe in recipes %}
     <div class="media border rounded p-4 my-2">
-        <a href="/recipe/{{ recipe.pk }}">
+        <a href="{% url 'recipe' recipe.pk %}">
             {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="mr-3" alt="" width=75 height=75>
             {% else %}
@@ -29,7 +29,7 @@
             
         </a>
         <div class="media-body">
-            <a href="/recipe/{{ recipe.pk }}" class="text-reset"><h5 class="mt-0">{{ recipe.name }}</h5></a>
+            <a href="{% url 'recipe' recipe.pk %}" class="text-reset"><h5 class="mt-0">{{ recipe.name }}</h5></a>
             {{ recipe.description }}
             {% if recipe.cooking_time_min %}
                 <em>({{ recipe.cooking_time_min }} min)</em>

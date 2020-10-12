@@ -8,9 +8,20 @@
     <h2>{{ recipe.name }}</h2>
     <div class="ml-auto align-bottom">
         {% if request.user.is_authenticated %}
-            <a href="/recipe/edit/{{ recipe.pk }}" class="btn btn-primary btn-sm">Edit</a>
+            {% if recipe.user == request.user %}
+                <a href="{% url 'recipe-change' recipe.pk %}" class="btn btn-primary btn-sm">Edit</a>
+            {% else %}
+                <span
+                    class="d-inline-block"
+                    tabindex="0"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="Cannot edit recipe of another user">
+                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>Edit</button>
+                </span>
+            {% endif %}
         {% else %}
-            <a href="/login" class="btn btn-primary btn-sm">Login</a>
+            <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Login</a>
         {% endif %}
     </div>
 </div>

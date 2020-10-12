@@ -46,3 +46,10 @@
 </main>
 {% endblock %}
 
+{% block bootstrap4_extra_script %}
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock %}

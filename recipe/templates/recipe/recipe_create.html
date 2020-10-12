@@ -1,0 +1,22 @@
+{% extends "recipe/base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block bootstrap4_extra_head %}
+{{ form.media }}
+{% endblock %}
+
+{% block title %}Create a new recipe{% endblock %}
+
+{% block content %}
+<h2>Create a new recipe</h2>
+<form method="post">
+  {% csrf_token %}
+  {% bootstrap_form form layout='horizontal' %}
+  
+  <div class="text-right">
+    {% buttons submit='Submit' reset='Clear' %}{% endbuttons %}
+  </div>
+</form>
+{% endblock %}
+

@@ -3,53 +3,19 @@
 # Standard library modules.
 
 # Third party modules.
-from django import forms
 from django.contrib import admin
 
 # Local modules.
 from .models import Recipe
-from .widgets import InstructionsTextWidget
+from .forms import AdminRecipeCreationForm, AdminRecipeChangeForm
 
 # Globals and constants variables.
 
 
-class RecipeCreationForm(forms.ModelForm):
-    class Meta:
-        model = Recipe
-        fields = (
-            "category",
-            "name",
-            "description",
-            "user",
-            "reference",
-            "cooking_time_min",
-            "instructions_markdown",
-            "image",
-        )
-
-
-class RecipeChangeForm(forms.ModelForm):
-    class Meta:
-        model = Recipe
-        fields = (
-            "category",
-            "name",
-            "description",
-            "user",
-            "reference",
-            "cooking_time_min",
-            "instructions_markdown",
-            "image",
-        )
-        widgets = {
-            "instructions_markdown": InstructionsTextWidget(),
-        }
-
-
 class RecipeAdmin(admin.ModelAdmin):
     # The forms to add and change user instances
-    form = RecipeChangeForm
-    add_form = RecipeCreationForm
+    form = AdminRecipeChangeForm
+    add_form = AdminRecipeCreationForm
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin

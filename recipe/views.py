@@ -4,10 +4,13 @@
 import re
 
 # Third party modules.
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 from login_otp.admin import UserAuthenticationForm
 from bs4 import BeautifulSoup
 import markdown
@@ -15,6 +18,7 @@ import markdown
 # Local modules.
 from .models import Recipe
 from .processor import MARKDOWN_EXT_PREVIEW
+from .forms import RecipeCreationForm, RecipeChangeForm
 
 # Globals and constants variables.
 
@@ -81,6 +85,40 @@ class RecipeView(RecipeBaseMixin, TemplateView):
         context["instructions_html"] = str(soup)
 
         return context
+
+
+class RecipeCreateView(RecipeBaseMixin, LoginRequiredMixin, CreateView):
+    template_name = "recipe/recipe_create.html"
+    form_class = RecipeCreationForm
+    success_url = "/"
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        super().form_valid(form)
+
+        pk = self.object.pk
+        return HttpResponseRedirect(f"/recipe/{pk}/")
+
+
+class RecipeChangeView(RecipeBaseMixin, UserPassesTestMixin, UpdateView):
+    template_name = "recipe/recipe_change.html"
+    model = Recipe
+    form_class = RecipeChangeForm
+    success_url = "/"
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        return self.model.objects.filter(pk=pk)
+
+    def test_func(self):
+        obj = self.get_object()
+        return obj.user == self.request.user
+
+    def form_valid(self, form):
+        super().form_valid(form)
+
+        pk = self.object.pk
+        return HttpResponseRedirect(f"/recipe/{pk}/")
 
 
 def process_instructions(request):
