@@ -10,6 +10,7 @@ from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import QuerySet, Q
 
 from login_otp.admin import UserAuthenticationForm
 from bs4 import BeautifulSoup
@@ -48,11 +49,20 @@ class RecipeListView(RecipeBaseMixin, ListView):
     context_object_name = "recipes"
 
     def get_queryset(self):
-        category = self.kwargs.get("category")
-        if category:
-            return self.model.objects.filter(category=category)
-        else:
-            return self.model.objects.all()
+        print(self.request.GET)
+        print(self.request.POST)
+
+        queryset = QuerySet(self.model)
+        if "category" in self.kwargs:
+            queryset = queryset.filter(category=self.kwargs["category"])
+
+        if "q" in self.request.GET:
+            q = self.request.GET["q"]
+            queryset = queryset.filter(
+                Q(name__icontains=q) | Q(description__icontains=q)
+            )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,6 +1,7 @@
 {% extends "recipe/base.html" %}
 {% load static %}
 {% load setvar %}
+{% load bootstrap4 %}
 
 {% block title %}{{ requested_category_name }}{% endblock %}
 
@@ -8,6 +9,15 @@
 <div class="d-flex mt-4">
     <h2>{{ requested_category_name }}</h2>
     <div class="ml-auto align-bottom">
+        <div class="form-inline">
+            <input type="text" id="search-query" class="form-control form-control-sm mr-1">
+            <div class="btn-group" role="group" aria-label="Search bar">
+                <button id="button-filter" class="btn btn-primary btn-sm" disabled>Filter</button>
+                <button id="button-clear" class="btn btn-primary btn-sm" disabled>Clear</button>
+            </div>
+        </div>
+    </div>
+    <div class="ml-3 align-bottom">
         {% if request.user.is_authenticated %}
             <div class="btn-group" role="group" aria-label="Toolbar">
                 <a href="{% url 'recipe-create' %}" class="btn btn-primary btn-sm">Add</a>
@@ -18,6 +28,8 @@
         {% endif %}
     </div>
 </div>
+
+
 
 {%if recipes %}
     <div>
@@ -82,4 +94,29 @@
       </ul>
     </nav>
 {% endif %}
+{% endblock %}
+
+{% block bootstrap4_extra_script %}
+{{ block.super }}
+<script>
+$(function() {
+    var url = new URL(window.location.toString());
+    $("#search-query").val(url.searchParams.get("q"));
+    $("#button-filter").prop("disabled", !url.searchParams.has("q"));
+    $("#button-clear").prop("disabled", !url.searchParams.has("q"));
+});
+$("#search-query").keyup(function() {
+    $("#button-filter").prop('disabled', !$(this).val().trim());
+});
+$("#button-filter").click(function() {
+    var url = new URL(window.location.toString());
+    url.searchParams.set("q", $("#search-query").val());
+    window.location = url.toString();
+});
+$("#button-clear").click(function() {
+    var url = new URL(window.location.toString());
+    url.searchParams.delete("q");
+    window.location = url.toString();
+});
+</script>
 {% endblock %}
