@@ -29,6 +29,37 @@ DEFINITION_PATTERN = re.compile(
 )
 
 
+class RecipeProcessorError(Exception):
+    pass
+
+
+class NoUnitDefinitionError(RecipeProcessorError):
+    def __init__(self, unit):
+        super().__init__(f"No definition for {unit}")
+        self.unit = unit
+
+
+class UnitConversionError(RecipeProcessorError):
+    def __init__(self, from_unit, to_unit):
+        super().__init__(f"Cannot convert {from_unit} to {to_unit}")
+        self.from_unit = from_unit
+        self.to_unit = to_unit
+
+
+class UnitMismatchError(RecipeProcessorError):
+    def __init__(self, expected_unit):
+        super().__init__(
+            f"Mismatch with ingredient units. Expected unit {expected_unit:~P}"
+        )
+        self.expected_unit = expected_unit
+
+
+class UnknownUnitError(RecipeProcessorError):
+    def __init__(self, unit):
+        super().__init__(f"Unknown unit {unit}")
+        self.unit = unit
+
+
 class IngredientList:
     def __init__(self, unit_definitions, unit_conversions):
         self.conversions = {}
@@ -47,6 +78,11 @@ class IngredientList:
             self.definitions[unit] = UnitDefinition(vmin, vmax, digits)
 
         self.ingredients = {}
+        self.errors = []
+
+    def _log_error(self, error):
+        self.errors.append(error)
+        logger.error(str(error))
 
     def _create_quantity_text(self, quantity, unit):
         definition = self.definitions[unit]
@@ -63,7 +99,8 @@ class IngredientList:
         equivalences = []
         for unit in self.conversions[name]:
             if unit not in self.definitions:
-                logger.error(f"No definition for {unit}")
+                error = NoUnitDefinitionError(unit)
+                self._log_error(error)
                 continue
 
             try:
@@ -74,7 +111,8 @@ class IngredientList:
                 elif uquantity.check("[length] ** 3") and name in self.densities:
                     equivalent_quantity = (uquantity * self.densities[name]).to(unit)
                 else:
-                    logger.error(f"Cannot convert {uquantity.units} to {unit}")
+                    error = UnitConversionError(uquantity.units, unit)
+                    self._log_error(error)
                     continue
 
             # Check acceptable range
@@ -98,9 +136,10 @@ class IngredientList:
             try:
                 self.ingredients[name] += ureg.Quantity(quantity)
             except:
-                logger.error("Adding quantity to ingredients")
                 other_unit = self.ingredients[name].units
-                return f"!!!error mismatch with ingredient units. Expecting unit {other_unit:~P}"
+                error = UnitMismatchError(other_unit)
+                self._log_error(error)
+                return f"!!!error {error}"
 
             quantity_text = humanize.fractional(quantity)
             return f"*{name}* ({quantity_text})"
@@ -109,8 +148,9 @@ class IngredientList:
         try:
             uquantity = quantity * ureg(unit)
         except:
-            logger.error("Creating pint quantity")
-            return f"!!!error unknown unit {unit}"
+            error = UnknownUnitError(unit)
+            self._log_error(error)
+            return f"!!!error {error}"
 
         # Convert to quantity to mass, if possible
         if uquantity.check("[mass]") and name in self.densities:
@@ -122,9 +162,10 @@ class IngredientList:
         try:
             self.ingredients[name] += uquantity
         except:
-            logger.error("Adding quantity to ingredients")
             other_unit = self.ingredients[name].units
-            return f"!!!error mismatch with ingredient units. Expecting unit {other_unit:~P}, got {uquantity.units:~P}"
+            error = UnitMismatchError(other_unit)
+            self._log_error(error)
+            return f"!!!error {error}"
 
         # No conversion for this ingredient
         if name not in self.conversions:
