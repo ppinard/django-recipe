@@ -244,7 +244,7 @@ class RecipePreprocessor(Preprocessor):
 class TemperatureInlineProcessor(InlineProcessor):
     def __init__(self, md=None):
         pattern = r"\((?P<temperature>\d+)\)\[(?P<unit>[CF]?)\]"
-        super().__init__(self, pattern, md=md)
+        super().__init__(pattern, md)
 
     def handleMatch(self, match, data):
         temperature, unit = match.groups()
@@ -278,7 +278,7 @@ class TemperatureInlineProcessor(InlineProcessor):
 
 class RecipeExtension(Extension):
     def __init__(
-        self, unit_definitions, unit_conversions, output_ingredient_list, **kwargs
+        self, unit_definitions, unit_conversions, output_ingredient_list=True, **kwargs
     ):
         super().__init__(**kwargs)
         self.unit_definitions = unit_definitions
@@ -286,16 +286,16 @@ class RecipeExtension(Extension):
         self.output_ingredient_list = output_ingredient_list
 
     def extendMarkdown(self, md):
-        processor = RecipePreprocessor(
+        self.recipe_processor = RecipePreprocessor(
             self.unit_definitions,
             self.unit_conversions,
             self.output_ingredient_list,
             md,
         )
-        md.preprocessors.register(processor, "recipe", 12)
+        md.preprocessors.register(self.recipe_processor, "recipe", 12)
 
-        processor = TemperatureInlineProcessor(md)
-        md.inlinePatterns.register(processor, "temp", 175)
+        self.temperature_processor = TemperatureInlineProcessor(md)
+        md.inlinePatterns.register(self.temperature_processor, "temp", 175)
 
 
 MARKDOWN_EXT = RecipeExtension(
