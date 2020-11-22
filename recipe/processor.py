@@ -201,6 +201,10 @@ class RecipePreprocessor(Preprocessor):
 
 
 class TemperatureInlineProcessor(InlineProcessor):
+    def __init__(self, md=None):
+        pattern = r"\((?P<temperature>\d+)\)\[(?P<unit>[CF]?)\]"
+        super().__init__(self, pattern, md=md)
+
     def handleMatch(self, match, data):
         temperature, unit = match.groups()
 
@@ -249,8 +253,8 @@ class RecipeExtension(Extension):
         )
         md.preprocessors.register(processor, "recipe", 12)
 
-        pattern = r"\((?P<temperature>\d+)\)\[(?P<unit>[CF]?)\]"
-        md.inlinePatterns.register(TemperatureInlineProcessor(pattern, md), "temp", 175)
+        processor = TemperatureInlineProcessor(md)
+        md.inlinePatterns.register(processor, "temp", 175)
 
 
 MARKDOWN_EXT = RecipeExtension(
