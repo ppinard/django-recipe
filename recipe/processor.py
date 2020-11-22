@@ -39,6 +39,12 @@ class NoUnitDefinitionError(RecipeProcessorError):
         self.unit = unit
 
 
+class NoUnitConversionError(RecipeProcessorError):
+    def __init__(self, ingredient):
+        super().__init__(f"No conversion for {ingredient}")
+        self.ingredient = ingredient
+
+
 class UnitConversionError(RecipeProcessorError):
     def __init__(self, from_unit, to_unit):
         super().__init__(f"Cannot convert {from_unit} to {to_unit}")
@@ -169,6 +175,9 @@ class IngredientList:
 
         # No conversion for this ingredient
         if name not in self.conversions:
+            error = NoUnitConversionError(name)
+            self._log_error(error)
+
             quantity_text = self._create_quantity_text(quantity, unit)
             return f"*{name}* ({quantity_text})"
 
