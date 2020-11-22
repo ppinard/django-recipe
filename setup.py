@@ -17,7 +17,12 @@ with open(BASEDIR.joinpath("README.md"), "r") as fp:
 
 PACKAGES = find_packages()
 PACKAGE_DATA = {
-    "recipe": ["static/recipe/*.svg", "static/recipe/*.ico", "templates/recipe/*.html"]
+    "recipe": [
+        "static/recipe/*.svg",
+        "static/recipe/*.ico",
+        "templates/recipe/*.html",
+        "management/commands/*.py",
+    ],
 }
 
 with open(BASEDIR.joinpath("requirements.txt"), "r") as fp:
