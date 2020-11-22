@@ -135,7 +135,7 @@ class IngredientList:
         equivalences = self._create_equivalences(name, uquantity)
         return f"*{name}* (" + " | ".join(equivalences) + ")"
 
-    def get_list(self):
+    def get_lines(self):
         lines = []
 
         for name, uquantity in sorted(self.ingredients.items()):
@@ -192,7 +192,7 @@ class RecipePreprocessor(Preprocessor):
         outlines = []
         if self.output_ingredient_list:
             outlines += ["# Ingredients", ""]
-            outlines += self.ingredientlist.get_list()
+            outlines += self.ingredientlist.get_lines()
             outlines += ["# Instructions", ""]
 
         outlines += newlines
